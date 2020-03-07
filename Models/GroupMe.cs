@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json.Linq;
 
-namespace groupme {
+namespace groupme.Models {
     public class GroupMe {
         public string text { get; set; }
         public string name { get; set; }
