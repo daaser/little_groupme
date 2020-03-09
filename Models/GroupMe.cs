@@ -1,5 +1,4 @@
 using System;
-using Newtonsoft.Json.Linq;
 
 namespace groupme.Models {
     public class GroupMe {
