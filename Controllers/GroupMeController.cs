@@ -12,46 +12,43 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 
 using groupme.Models;
+using groupme.Services;
 
-namespace groupme.Controllers {
+namespace groupme.Controllers
+{
     [ApiController]
     [Route("/")]
-    public class GroupMeController: ControllerBase {
+    public class GroupMeController: ControllerBase
+    {
         private readonly ILogger<GroupMeController> _logger;
-        private readonly IHttpClientFactory _clientFactory;
+        private readonly IGroupMeService _groupme;
         private readonly IConfiguration _config;
 
         public GroupMeController(
             ILogger<GroupMeController> logger,
-            IHttpClientFactory clientFactory,
-            IConfiguration config
-        ) {
+            IGroupMeService groupme,
+            IConfiguration config)
+        {
             _logger = logger;
-            _clientFactory = clientFactory;
+            _groupme = groupme;
             _config = config;
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(GroupMe gm) {
-            var options = new JsonSerializerOptions {
+        public async Task<ActionResult> Post(GroupMe gm)
+        {
+            var options = new JsonSerializerOptions
+            {
                 WriteIndented = true
             };
             _logger.LogInformation(JsonSerializer.Serialize(gm, options));
 
-            if (gm.user_id == _config["Id"]) {
-                var fname = gm.name.Split()[0];
-                var payload = new GroupMeResponse() {
-                    bot_id = _config["BotId"],
-                    text = $"Shut up {fname}"
-                };
-
-                var json = JsonSerializer.Serialize(payload);
-
-                var client = _clientFactory.CreateClient("groupme");
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-                var response = await client.PostAsync("v3/bots/post", content);
-
-                if (!response.IsSuccessStatusCode) {
+            if (gm.user_id == _config["USER_ID"])
+            {
+                var name = await _groupme.GetUserByIdAsync(gm.user_id);
+                var response = await _groupme.RespondToUserAsync(name);
+                if (!response.IsSuccessStatusCode)
+                {
                     return new StatusCodeResult((int)response.StatusCode);
                 }
             }
