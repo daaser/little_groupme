@@ -42,8 +42,9 @@ namespace groupme.Controllers
                 WriteIndented = true
             };
             _logger.LogInformation(JsonSerializer.Serialize(gm, options));
+            var random = new Random();
 
-            if (gm.user_id == _config["USER_ID"])
+            if (gm.user_id == _config["USER_ID"] && random.Next(4) == 1)
             {
                 var name = await _groupme.GetUserByIdAsync(gm.user_id);
                 var response = await _groupme.RespondToUserAsync(name);
