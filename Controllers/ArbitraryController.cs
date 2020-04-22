@@ -33,5 +33,11 @@ namespace groupme.Controllers
             _logger.LogInformation(JsonSerializer.Serialize(j, options));
             return Ok();
         }
+
+        [HttpGet]
+        public ActionResult Get()
+        {
+            return Ok("bad dog\n");
+        }
     }
 }

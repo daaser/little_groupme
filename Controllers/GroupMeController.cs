@@ -46,7 +46,8 @@ namespace groupme.Controllers
 
             if (gm.user_id == _config["USER_ID"] && random.Next(4) == 1)
             {
-                var name = await _groupme.GetUserByIdAsync(gm.user_id);
+                // var name = await _groupme.GetUserByIdAsync(gm.user_id);
+                var name = "Brandon";
                 var response = await _groupme.RespondToUserAsync(name);
                 if (!response.IsSuccessStatusCode)
                 {
